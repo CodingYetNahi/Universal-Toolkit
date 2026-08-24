@@ -15,7 +15,7 @@ import { calculateEmi, calculateFd, calculateGst, calculateRd, calculateSip, for
 type CalcMode = 'tip' | 'percentage' | 'discount' | 'compound' | 'india';
 
 export const CalculatorTool: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<CalcMode>('tip');
+  const [activeTab, setActiveTab] = useState<CalcMode>('india');
 
   // 1. Tip & Bill Split State
   const [billAmount, setBillAmount] = useState<number>(85);
@@ -91,6 +91,12 @@ export const CalculatorTool: React.FC = () => {
       {/* Sub Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-200 dark:border-slate-800">
         <button
+          onClick={() => setActiveTab('india')}
+          className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all shrink-0 ${activeTab === 'india' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
+        >
+          <Calculator className="w-3.5 h-3.5" /> India Finance
+        </button>
+        <button
           onClick={() => setActiveTab('tip')}
           className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all shrink-0 ${
             activeTab === 'tip'
@@ -122,12 +128,6 @@ export const CalculatorTool: React.FC = () => {
         >
           <Tag className="w-3.5 h-3.5" />
           Discount & Sale Price
-        </button>
-        <button
-          onClick={() => setActiveTab('india')}
-          className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all shrink-0 ${activeTab === 'india' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
-        >
-          <Calculator className="w-3.5 h-3.5" /> India Finance
         </button>
         <button
           onClick={() => setActiveTab('compound')}
