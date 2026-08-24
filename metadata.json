@@ -1,0 +1,6 @@
+{
+  "name": "Universal Everyday Toolkit",
+  "description": "An all-in-one suite of everyday web tools including smart notes, text utilities, unit & time converters, QR studio, financial calculators, and ambient focus timer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
