@@ -1,5 +1,4 @@
 export type ToolCategory = 
-  | 'notes'
   | 'text-dev'
   | 'converters'
   | 'time'
@@ -14,14 +13,6 @@ export interface ToolDefinition {
   shortDesc: string;
   icon: string;
   badge?: string;
-}
-
-export interface NoteItem {
-  id: string;
-  title: string;
-  content: string;
-  updatedAt: number;
-  pinned?: boolean;
 }
 
 export interface WorldClockCity {

@@ -17,12 +17,11 @@ interface NavigationProps {
 }
 
 export const TOOLS: ToolDefinition[] = [
-  { id: 'notes', name: 'Smart Notes', shortDesc: 'Markdown & Stats', icon: 'file' },
+  { id: 'calculator', name: 'India Finance', shortDesc: 'GST, EMI, SIP, FD & RD', icon: 'calc' },
   { id: 'text-dev', name: 'Text & Dev', shortDesc: 'JSON, Regex & Diff', icon: 'code' },
   { id: 'converters', name: 'Unit Converter', shortDesc: 'Length, Weight, Data', icon: 'ruler' },
   { id: 'time', name: 'World Clock & Dates', shortDesc: 'Timezones & Age', icon: 'globe' },
   { id: 'focus', name: 'Focus & Soundscapes', shortDesc: 'Pomodoro & Audio', icon: 'timer', badge: 'Audio' },
-  { id: 'calculator', name: 'Smart Calculators', shortDesc: 'Tip, Percent, Finance', icon: 'calc' },
   { id: 'qrcode', name: 'QR & Barcode', shortDesc: 'Custom Studio', icon: 'qr' },
   { id: 'color', name: 'Color Studio', shortDesc: 'WCAG & Palettes', icon: 'color' },
 ];

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Navigation } from './components/Navigation';
 import { CommandPalette } from './components/CommandPalette';
-import { NotesTool } from './components/tools/NotesTool';
 import { TextDevTool } from './components/tools/TextDevTool';
 import { UnitConverterTool } from './components/tools/UnitConverterTool';
 import { TimezoneTool } from './components/tools/TimezoneTool';
@@ -16,7 +15,8 @@ import { Sparkles, ShieldCheck, Zap } from 'lucide-react';
 export default function App() {
   const [activeTool, setActiveTool] = useState<ToolCategory>(() => {
     const saved = localStorage.getItem('omni_active_tool');
-    return (saved as ToolCategory) || 'notes';
+    const validTools: ToolCategory[] = ['calculator', 'text-dev', 'converters', 'time', 'focus', 'qrcode', 'color'];
+    return validTools.includes(saved as ToolCategory) ? (saved as ToolCategory) : 'calculator';
   });
 
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -54,8 +54,6 @@ export default function App() {
 
   const renderActiveTool = () => {
     switch (activeTool) {
-      case 'notes':
-        return <NotesTool />;
       case 'text-dev':
         return <TextDevTool />;
       case 'converters':
@@ -71,7 +69,7 @@ export default function App() {
       case 'color':
         return <ColorStudioTool />;
       default:
-        return <NotesTool />;
+        return <CalculatorTool />;
     }
   };
 
