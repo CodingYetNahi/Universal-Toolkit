@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import QRCode from 'qrcode';
 
-type QrType = 'url' | 'wifi' | 'email' | 'phone' | 'vcard' | 'text' | 'barcode';
+type QrType = 'url' | 'wifi' | 'email' | 'phone' | 'vcard' | 'text' | 'barcode' | 'upi';
 
 export const QRCodeTool: React.FC = () => {
   const [qrType, setQrType] = useState<QrType>('url');
@@ -40,6 +40,13 @@ export const QRCodeTool: React.FC = () => {
 
   const [rawText, setRawText] = useState('Scan this to reveal secret message.');
   const [barcodeValue, setBarcodeValue] = useState('978020137962');
+  const [upiId, setUpiId] = useState('name@bank');
+  const [upiName, setUpiName] = useState('Payee Name');
+  const [upiAmount, setUpiAmount] = useState('');
+  const [upiNote, setUpiNote] = useState('');
+  const upiIdValid = /^[\w.-]{2,}@[\w.-]{2,}$/.test(upiId.trim());
+  const upiAmountValid = upiAmount === '' || /^(?:[1-9]\d*(?:\.\d{1,2})?|0\.\d{1,2})$/.test(upiAmount) && Number(upiAmount) > 0;
+  const upiValid = upiIdValid && upiName.trim().length > 0 && upiAmountValid;
 
   // Customization
   const [fgColor, setFgColor] = useState('#0f172a');
@@ -66,6 +73,13 @@ export const QRCodeTool: React.FC = () => {
         return `BEGIN:VCARD\nVERSION:3.0\nN:${vcardName}\nFN:${vcardName}\nORG:${vcardOrg}\nTEL:${vcardPhone}\nEMAIL:${vcardEmail}\nEND:VCARD`;
       case 'text':
         return rawText;
+      case 'upi': {
+        if (!upiValid) return '';
+        const params = new URLSearchParams({ pa: upiId.trim(), pn: upiName.trim(), cu: 'INR' });
+        if (upiAmount) params.set('am', Number(upiAmount).toFixed(2));
+        if (upiNote.trim()) params.set('tn', upiNote.trim());
+        return `upi://pay?${params.toString()}`;
+      }
       default:
         return urlInput;
     }
@@ -78,6 +92,7 @@ export const QRCodeTool: React.FC = () => {
     }
 
     const payload = getQrPayload();
+    if (!payload) { setDataUrl(''); return; }
     QRCode.toDataURL(payload, {
       width: qrSize,
       margin: 2,
@@ -110,6 +125,7 @@ export const QRCodeTool: React.FC = () => {
     qrSize,
     errorLevel,
     barcodeValue,
+    upiId, upiName, upiAmount, upiNote,
   ]);
 
   // Render Barcode on Canvas
@@ -236,6 +252,12 @@ export const QRCodeTool: React.FC = () => {
           }`}
         >
           <QrCode className="w-3.5 h-3.5" /> Plain Text
+        </button>
+        <button
+          onClick={() => setQrType('upi')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 ${qrType === 'upi' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'}`}
+        >
+          <QrCode className="w-3.5 h-3.5" /> UPI Payment
         </button>
         <button
           onClick={() => setQrType('barcode')}
@@ -423,6 +445,17 @@ export const QRCodeTool: React.FC = () => {
                 onChange={(e) => setBarcodeValue(e.target.value)}
                 className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-mono"
               />
+            </div>
+          )}
+
+          {qrType === 'upi' && (
+            <div className="space-y-3">
+              <div><label className="block text-xs font-medium mb-1">UPI ID</label><input value={upiId} onChange={(e) => setUpiId(e.target.value)} aria-invalid={!upiIdValid} className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl" />{!upiIdValid && <p className="mt-1 text-xs text-rose-600">Enter a valid UPI ID such as name@bank.</p>}</div>
+              <div><label className="block text-xs font-medium mb-1">Payee name</label><input value={upiName} onChange={(e) => setUpiName(e.target.value)} className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl" />{!upiName.trim() && <p className="mt-1 text-xs text-rose-600">Payee name is required.</p>}</div>
+              <div><label className="block text-xs font-medium mb-1">Amount (optional, INR)</label><input type="text" inputMode="decimal" value={upiAmount} onChange={(e) => setUpiAmount(e.target.value)} placeholder="500.00" aria-invalid={!upiAmountValid} className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl" />{!upiAmountValid && <p className="mt-1 text-xs text-rose-600">Use a positive amount with no more than two decimal places.</p>}</div>
+              <div><label className="block text-xs font-medium mb-1">Transaction note (optional)</label><input value={upiNote} onChange={(e) => setUpiNote(e.target.value)} className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl" /></div>
+              <div className="rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 p-3 text-xs"><strong>Verify the payee name and UPI ID in your payment app before paying.</strong><p className="mt-1 text-slate-600 dark:text-slate-400">Generated entirely in your browser. Never enter a PIN, OTP, card or bank account details here.</p></div>
+              <div><span className="text-xs font-medium">Final UPI URI</span><code className="mt-1 block break-all rounded-lg bg-slate-100 dark:bg-slate-800 p-2 text-[11px]">{getQrPayload() || 'Complete the valid fields to generate.'}</code></div>
             </div>
           )}
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { 
+import {
   Palette, 
   Copy, 
   Check, 
@@ -8,6 +8,15 @@ import {
   XCircle,
   Shuffle
 } from 'lucide-react';
+
+const INDIA_PALETTES = [
+  { name: 'Marigold', colors: ['#7C2D12', '#C2410C', '#F59E0B', '#FEF3C7'] },
+  { name: 'Peacock', colors: ['#083344', '#075985', '#0F766E', '#D1FAE5'] },
+  { name: 'Indigo Textile', colors: ['#1E1B4B', '#3730A3', '#6366F1', '#FFF7ED'] },
+  { name: 'Mehendi', colors: ['#14532D', '#3F6212', '#A3A56A', '#F5E6C8'] },
+  { name: 'Terracotta', colors: ['#7F1D1D', '#9A3412', '#C26D4B', '#F5E0D3'] },
+  { name: 'Indian Festive', colors: ['#86198F', '#CA8A04', '#1E3A8A', '#FFF7ED'] },
+];
 
 export const ColorStudioTool: React.FC = () => {
   const [hexColor, setHexColor] = useState('#4f46e5');
@@ -106,6 +115,12 @@ export const ColorStudioTool: React.FC = () => {
 
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-xs space-y-6">
+      <section aria-labelledby="india-palettes-heading" className="space-y-3">
+        <div><h2 id="india-palettes-heading" className="text-sm font-semibold">India-inspired palettes</h2><p className="text-xs text-slate-500">Original, restrained colour sets. Select a swatch to use it with the existing contrast tools.</p></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {INDIA_PALETTES.map((palette) => <div key={palette.name} className="rounded-xl border border-slate-200 dark:border-slate-700 p-3"><h3 className="mb-2 text-xs font-semibold">{palette.name}</h3><div className="flex overflow-hidden rounded-lg" role="group" aria-label={`${palette.name} palette`}>{palette.colors.map((color) => <button key={color} type="button" onClick={() => { setHexColor(color); setTextColor(['#FEF3C7', '#D1FAE5', '#FFF7ED', '#F5E6C8', '#F5E0D3'].includes(color) ? '#0F172A' : '#FFFFFF'); }} className="h-10 flex-1 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" style={{ backgroundColor: color }} aria-label={`Use ${color}`} title={color} />)}</div></div>)}
+        </div>
+      </section>
       {/* Top Header & Color Picker */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
         <div className="md:col-span-6 flex items-center gap-4">

@@ -16,6 +16,14 @@ import {
 } from 'lucide-react';
 import { NoteItem } from '../../types';
 
+const NOTE_TEMPLATES = [
+  ['Monthly Household Budget', ['Income', 'Rent/EMI', 'Groceries', 'Utilities', 'Transport', 'Education', 'Healthcare', 'Savings', 'Other expenses']],
+  ['Kirana and Grocery List', ['Rice and grains', 'Dal and pulses', 'Atta/flour', 'Spices', 'Vegetables', 'Fruits', 'Dairy', 'Household supplies']],
+  ['Festival or Family Event Planner', ['Date', 'Guests', 'Shopping', 'Food', 'Decorations', 'Travel', 'Budget', 'Responsibilities']],
+  ['Indian Travel Checklist', ['Identification', 'Tickets', 'Hotel', 'Medicines', 'Chargers', 'Emergency contacts', 'Local transport', 'Weather essentials']],
+  ['Daily Work Checklist', ['Priority tasks', 'Calls', 'Follow-ups', 'Documents', 'Pending approvals', 'Tomorrow’s work']],
+] as const;
+
 export const NotesTool: React.FC = () => {
   const [notes, setNotes] = useState<NoteItem[]>(() => {
     const saved = localStorage.getItem('omni_notes');
@@ -71,6 +79,15 @@ export const NotesTool: React.FC = () => {
       updatedAt: Date.now(),
       pinned: false,
     };
+    setNotes((prev) => [newNote, ...prev]);
+    setActiveNoteId(newNote.id);
+  };
+
+  const createFromTemplate = (index: number) => {
+    const template = NOTE_TEMPLATES[index];
+    if (!template) return;
+    const [title, items] = template;
+    const newNote: NoteItem = { id: `${Date.now()}-template`, title, content: `# ${title}\n\n${items.map((item) => `- [ ] ${item}`).join('\n')}`, updatedAt: Date.now(), pinned: false };
     setNotes((prev) => [newNote, ...prev]);
     setActiveNoteId(newNote.id);
   };
@@ -227,6 +244,14 @@ export const NotesTool: React.FC = () => {
             New
           </button>
         </div>
+
+        <label className="text-[11px] font-medium text-slate-500 mb-3">
+          Templates — creates a new note
+          <select aria-label="Create note from template" defaultValue="" onChange={(e) => { createFromTemplate(Number(e.target.value)); e.target.value = ''; }} className="mt-1 w-full px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-800 dark:text-slate-200">
+            <option value="" disabled>Choose an Indian template…</option>
+            {NOTE_TEMPLATES.map(([title], index) => <option key={title} value={index}>{title}</option>)}
+          </select>
+        </label>
 
         {/* Search */}
         <div className="relative mb-3">

@@ -11,7 +11,7 @@ import { CalculatorTool } from './components/tools/CalculatorTool';
 import { QRCodeTool } from './components/tools/QRCodeTool';
 import { ColorStudioTool } from './components/tools/ColorStudioTool';
 import { ToolCategory } from './types';
-import { Sparkles, ShieldCheck, Zap, Heart } from 'lucide-react';
+import { Sparkles, ShieldCheck, Zap } from 'lucide-react';
 
 export default function App() {
   const [activeTool, setActiveTool] = useState<ToolCategory>(() => {
@@ -87,6 +87,10 @@ export default function App() {
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <div className="rounded-2xl border border-amber-200/70 dark:border-indigo-800/70 bg-gradient-to-r from-amber-50 via-white to-cyan-50 dark:from-amber-950/20 dark:via-slate-900 dark:to-cyan-950/20 px-5 py-4">
+          <h2 className="font-bold text-slate-900 dark:text-white">Namaste! Welcome to Universal Toolkit</h2>
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Fast, private and practical everyday tools—designed with India in mind and useful everywhere.</p>
+        </div>
         {/* Navigation Tab Bar */}
         <Navigation activeTool={activeTool} onSelectTool={setActiveTool} />
 
@@ -121,7 +125,7 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-1">
-            <span>Built for everyone with modern web standards</span>
+            <span>Made with care in India • Private and client-side</span>
           </div>
         </div>
       </footer>

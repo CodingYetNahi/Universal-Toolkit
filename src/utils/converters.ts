@@ -77,10 +77,14 @@ export const UNIT_CATEGORIES: Record<UnitType, { name: string; base: string; uni
     units: [
       { id: 'sqm', name: 'Square Meter', symbol: 'm²', ratioToBase: 1 },
       { id: 'sqkm', name: 'Square Kilometer', symbol: 'km²', ratioToBase: 1000000 },
-      { id: 'sqft', name: 'Square Foot', symbol: 'ft²', ratioToBase: 0.092903 },
-      { id: 'sqyd', name: 'Square Yard', symbol: 'yd²', ratioToBase: 0.836127 },
+      { id: 'sqft', name: 'Square Foot', symbol: 'ft²', ratioToBase: 0.09290304 },
+      { id: 'sqyd', name: 'Square Yard', symbol: 'yd²', ratioToBase: 0.83612736 },
       { id: 'acre', name: 'Acre', symbol: 'ac', ratioToBase: 4046.8564224 },
       { id: 'hectare', name: 'Hectare', symbol: 'ha', ratioToBase: 10000 },
+      { id: 'guntha', name: 'Guntha', symbol: 'guntha', ratioToBase: 1089 * 0.09290304 },
+      { id: 'cent', name: 'Cent', symbol: 'cent', ratioToBase: 435.6 * 0.09290304 },
+      { id: 'kanal', name: 'Standard Kanal', symbol: 'kanal', ratioToBase: 5445 * 0.09290304 },
+      { id: 'marla', name: 'Standard Marla', symbol: 'marla', ratioToBase: 272.25 * 0.09290304 },
     ],
   },
 };

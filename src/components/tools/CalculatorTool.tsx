@@ -10,8 +10,9 @@ import {
   ArrowRight,
   PieChart
 } from 'lucide-react';
+import { calculateEmi, calculateFd, calculateGst, calculateRd, calculateSip, formatINR, parseSafeNumber } from '../../utils/india';
 
-type CalcMode = 'tip' | 'percentage' | 'discount' | 'compound';
+type CalcMode = 'tip' | 'percentage' | 'discount' | 'compound' | 'india';
 
 export const CalculatorTool: React.FC = () => {
   const [activeTab, setActiveTab] = useState<CalcMode>('tip');
@@ -121,6 +122,12 @@ export const CalculatorTool: React.FC = () => {
         >
           <Tag className="w-3.5 h-3.5" />
           Discount & Sale Price
+        </button>
+        <button
+          onClick={() => setActiveTab('india')}
+          className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all shrink-0 ${activeTab === 'india' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
+        >
+          <Calculator className="w-3.5 h-3.5" /> India Finance
         </button>
         <button
           onClick={() => setActiveTab('compound')}
@@ -465,6 +472,54 @@ export const CalculatorTool: React.FC = () => {
           </div>
         </div>
       )}
+      {activeTab === 'india' && <IndiaFinance />}
     </div>
   );
+};
+
+type FinanceMode = 'gst' | 'emi' | 'sip' | 'fd' | 'rd';
+const fieldClass = 'w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white';
+const Result = ({ label, value }: { label: string; value: number }) => <div className="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-3"><div className="text-[11px] text-slate-500">{label}</div><div className="font-bold text-indigo-700 dark:text-indigo-300 break-words">{formatINR(value)}</div></div>;
+
+const IndiaFinance = () => {
+  const [mode, setMode] = useState<FinanceMode>('gst');
+  const [amount, setAmount] = useState('100000');
+  const [rate, setRate] = useState('18');
+  const [gstInclusive, setGstInclusive] = useState(false);
+  const [tenure, setTenure] = useState('5');
+  const [tenureUnit, setTenureUnit] = useState<'months' | 'years'>('years');
+  const [frequency, setFrequency] = useState('4');
+  const numericAmount = parseSafeNumber(amount, NaN);
+  const numericRate = parseSafeNumber(rate, NaN);
+  const numericTenure = parseSafeNumber(tenure, NaN);
+  const months = tenureUnit === 'years' ? numericTenure * 12 : numericTenure;
+  const commonInvalid = !Number.isFinite(numericAmount) || numericAmount < 0 || !Number.isFinite(numericRate) || numericRate < 0;
+  const tenureInvalid = !Number.isFinite(months) || months <= 0;
+  const gst = !commonInvalid && numericRate <= 100 ? calculateGst(numericAmount, numericRate, gstInclusive) : null;
+  const emi = !commonInvalid && !tenureInvalid ? calculateEmi(numericAmount, numericRate, months) : null;
+  const sip = !commonInvalid && !tenureInvalid ? calculateSip(numericAmount, numericRate, months) : null;
+  const fd = !commonInvalid && !tenureInvalid ? calculateFd(numericAmount, numericRate, months / 12, parseSafeNumber(frequency)) : null;
+  const rd = !commonInvalid && !tenureInvalid ? calculateRd(numericAmount, numericRate, months) : null;
+  const data = mode === 'gst' ? gst : mode === 'emi' ? emi : mode === 'sip' ? sip : mode === 'fd' ? fd : rd;
+
+  return <section className="space-y-5" aria-labelledby="india-finance-heading">
+    <div><h2 id="india-finance-heading" className="text-lg font-bold">India Finance</h2><p className="text-xs text-slate-500">Private, client-side estimates with Indian number formatting.</p></div>
+    <div className="flex gap-2 overflow-x-auto pb-1">{(['gst', 'emi', 'sip', 'fd', 'rd'] as FinanceMode[]).map((item) => <button key={item} onClick={() => setMode(item)} className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold ${mode === item ? 'bg-teal-700 text-white' : 'bg-slate-100 dark:bg-slate-800'}`}>{item.toUpperCase()} Calculator</button>)}</div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="space-y-4">
+        <label className="block text-xs font-medium">{mode === 'gst' ? (gstInclusive ? 'Invoice value (inclusive of GST)' : 'Taxable value') : mode === 'emi' ? 'Loan amount' : mode === 'sip' ? 'Monthly investment' : mode === 'fd' ? 'Deposit amount' : 'Monthly deposit'} (₹)<input type="text" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} className={`mt-1 ${fieldClass}`} /></label>
+        {!Number.isFinite(numericAmount) || numericAmount < 0 ? <p className="text-xs text-rose-600">Enter a valid non-negative amount.</p> : null}
+        <label className="block text-xs font-medium">{mode === 'gst' ? 'GST rate' : mode === 'sip' ? 'Expected annual return' : 'Annual interest rate'} (%)<input type="number" min="0" step="0.01" value={rate} onChange={(e) => setRate(e.target.value)} className={`mt-1 ${fieldClass}`} /></label>
+        {!Number.isFinite(numericRate) || numericRate < 0 || (mode === 'gst' && numericRate > 100) ? <p className="text-xs text-rose-600">Enter a valid rate{mode === 'gst' ? ' from 0% to 100%' : ''}.</p> : null}
+        {mode === 'gst' && <><div className="flex flex-wrap gap-2">{[0, 5, 12, 18, 28].map((preset) => <button key={preset} onClick={() => setRate(String(preset))} className="rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-1 text-xs">{preset}%</button>)}</div><label className="flex items-center gap-2 text-xs"><input type="checkbox" checked={gstInclusive} onChange={(e) => setGstInclusive(e.target.checked)} /> Invoice amount includes GST</label></>}
+        {mode !== 'gst' && <div className="grid grid-cols-2 gap-3"><label className="text-xs font-medium">Tenure<input type="number" min="0" step="1" value={tenure} onChange={(e) => setTenure(e.target.value)} className={`mt-1 ${fieldClass}`} /></label><label className="text-xs font-medium">Unit<select value={tenureUnit} onChange={(e) => setTenureUnit(e.target.value as 'months' | 'years')} className={`mt-1 ${fieldClass}`}><option value="months">Months</option><option value="years">Years</option></select></label></div>}
+        {mode !== 'gst' && tenureInvalid && <p className="text-xs text-rose-600">Tenure must be greater than zero.</p>}
+        {mode === 'fd' && <label className="block text-xs font-medium">Compounding frequency<select value={frequency} onChange={(e) => setFrequency(e.target.value)} className={`mt-1 ${fieldClass}`}><option value="1">Annually</option><option value="2">Half-yearly</option><option value="4">Quarterly</option><option value="12">Monthly</option></select></label>}
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 content-start" aria-live="polite">
+        {!data ? <p className="text-sm text-slate-500 sm:col-span-2">Complete valid inputs to see an estimate.</p> : mode === 'gst' && gst ? <><Result label="Taxable value" value={gst.taxable} /><Result label="GST amount" value={gst.gst} /><Result label="Final invoice value" value={gst.total} /><Result label="CGST (intra-state illustration)" value={gst.gst / 2} /><Result label="SGST (intra-state illustration)" value={gst.gst / 2} /><Result label="IGST (inter-state illustration)" value={gst.gst} /></> : mode === 'emi' && emi ? <><Result label="Monthly EMI" value={emi.emi} /><Result label="Total interest" value={emi.interest} /><Result label="Total repayment" value={emi.repayment} /><Result label="Principal" value={numericAmount} /></> : mode === 'sip' && sip ? <><Result label="Total invested" value={sip.invested} /><Result label="Estimated gain" value={sip.gain} /><Result label="Estimated maturity value" value={sip.maturity} /></> : mode === 'fd' && fd ? <><Result label="Interest earned" value={fd.interest} /><Result label="Maturity amount" value={fd.maturity} /></> : rd ? <><Result label="Total deposits" value={rd.deposits} /><Result label="Estimated interest" value={rd.interest} /><Result label="Estimated maturity value" value={rd.maturity} /></> : null}
+      </div>
+    </div>
+    <p className="rounded-xl bg-amber-50 dark:bg-amber-950/20 p-3 text-xs text-slate-600 dark:text-slate-300">{mode === 'gst' ? 'GST results are estimates; confirm tax treatment for actual transactions.' : mode === 'sip' || mode === 'rd' ? 'Returns are illustrative and not guaranteed.' : mode === 'fd' ? 'Estimate excludes tax and TDS.' : 'EMI is an estimate; lender schedules and charges may differ.'}</p>
+  </section>;
 };
