@@ -46,6 +46,9 @@ export const FocusAudioTool: React.FC = () => {
     { id: 'pink_noise', name: 'Pink Noise', icon: <Radio className="w-4 h-4" />, desc: 'Deep focus acoustic balance', volume: 0.4, active: false },
     { id: 'white_noise', name: 'White Noise', icon: <Activity className="w-4 h-4" />, desc: 'Blocks distracting chatter', volume: 0.3, active: false },
     { id: 'alpha_wave', name: '10Hz Alpha Tone', icon: <Brain className="w-4 h-4" />, desc: 'Binaural flow-state beat', volume: 0.3, active: false },
+    { id: 'indian_monsoon', name: 'Indian Monsoon', icon: <CloudRain className="w-4 h-4" />, desc: 'Soft, steady monsoon rain', volume: 0.35, active: false },
+    { id: 'courtyard', name: 'Quiet Courtyard Morning', icon: <Sparkles className="w-4 h-4" />, desc: 'Gentle airy morning ambience', volume: 0.25, active: false },
+    { id: 'train', name: 'Gentle Train Journey', icon: <Activity className="w-4 h-4" />, desc: 'Low, even travelling rhythm', volume: 0.25, active: false },
   ]);
 
   // Tasks State

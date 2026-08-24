@@ -29,21 +29,23 @@ interface CommandItem {
 }
 
 const COMMANDS: CommandItem[] = [
-  { id: 'notes', title: 'Notes & Markdown Scratchpad', category: 'Writing', icon: <FileText className="w-4 h-4" />, keywords: ['notes', 'scratchpad', 'markdown', 'write', 'editor', 'draft'] },
+  { id: 'notes', title: 'Notes & Markdown Scratchpad', category: 'Writing', icon: <FileText className="w-4 h-4" />, keywords: ['notes', 'scratchpad', 'markdown', 'write', 'editor', 'draft', 'India', 'budget template', 'kirana'] },
   { id: 'text-dev', title: 'JSON Formatter & Validator', category: 'Developer', icon: <Code2 className="w-4 h-4" />, keywords: ['json', 'format', 'lint', 'minify', 'pretty', 'validate'] },
   { id: 'text-dev', title: 'Case Converter (camelCase, snake_case, PascalCase)', category: 'Developer', icon: <Code2 className="w-4 h-4" />, keywords: ['case', 'camelcase', 'snakecase', 'kebab', 'title', 'upper'] },
   { id: 'text-dev', title: 'Base64 & URL Encoder / Decoder', category: 'Developer', icon: <Code2 className="w-4 h-4" />, keywords: ['base64', 'url', 'encode', 'decode', 'uri', 'btoa'] },
   { id: 'text-dev', title: 'UUID & Hash Generator', category: 'Developer', icon: <Code2 className="w-4 h-4" />, keywords: ['uuid', 'guid', 'sha256', 'hash', 'slug', 'random'] },
-  { id: 'converters', title: 'Unit Converter (Length, Weight, Temp, Storage)', category: 'Conversions', icon: <Ruler className="w-4 h-4" />, keywords: ['convert', 'length', 'weight', 'temperature', 'speed', 'storage', 'byte', 'mb', 'gb', 'km', 'miles', 'lbs', 'kg'] },
-  { id: 'time', title: 'World Clock & Meeting Planner', category: 'Time & Date', icon: <Globe className="w-4 h-4" />, keywords: ['world clock', 'timezone', 'time', 'slider', 'meeting', 'london', 'tokyo', 'new york'] },
+  { id: 'converters', title: 'Unit Converter (Length, Weight, Temp, Storage)', category: 'Conversions', icon: <Ruler className="w-4 h-4" />, keywords: ['convert', 'length', 'weight', 'temperature', 'speed', 'storage', 'byte', 'mb', 'gb', 'km', 'miles', 'lbs', 'kg', 'guntha', 'cent', 'kanal', 'marla'] },
+  { id: 'time', title: 'World Clock & Meeting Planner', category: 'Time & Date', icon: <Globe className="w-4 h-4" />, keywords: ['world clock', 'timezone', 'time', 'slider', 'meeting', 'london', 'tokyo', 'new york', 'IST', 'Indian cities'] },
   { id: 'time', title: 'Date Difference & Age Calculator', category: 'Time & Date', icon: <Globe className="w-4 h-4" />, keywords: ['date', 'days between', 'age', 'birthday', 'duration', 'countdown'] },
-  { id: 'focus', title: 'Pomodoro Focus Timer & Ambient Audio', category: 'Productivity', icon: <Timer className="w-4 h-4" />, keywords: ['pomodoro', 'timer', 'focus', 'rain', 'ocean', 'campfire', 'ambient', 'sound', 'noise', 'white noise', 'binaural'] },
+  { id: 'focus', title: 'Pomodoro Focus Timer & Ambient Audio', category: 'Productivity', icon: <Timer className="w-4 h-4" />, keywords: ['pomodoro', 'timer', 'focus', 'rain', 'ocean', 'campfire', 'ambient', 'sound', 'noise', 'white noise', 'binaural', 'monsoon'] },
   { id: 'focus', title: 'Daily Focus Checklist', category: 'Productivity', icon: <Timer className="w-4 h-4" />, keywords: ['checklist', 'todo', 'task', 'priority'] },
   { id: 'calculator', title: 'Tip & Bill Splitter with Tax', category: 'Finance', icon: <Calculator className="w-4 h-4" />, keywords: ['tip', 'bill', 'split', 'restaurant', 'tax', 'calculator'] },
   { id: 'calculator', title: 'Percentage & Discount Calculator', category: 'Finance', icon: <Calculator className="w-4 h-4" />, keywords: ['percent', 'percentage', 'discount', 'sale', 'save', 'price'] },
   { id: 'calculator', title: 'Compound Interest & Savings Growth', category: 'Finance', icon: <Calculator className="w-4 h-4" />, keywords: ['compound', 'interest', 'savings', 'invest', 'principal', 'growth'] },
+  { id: 'calculator', title: 'India Finance — GST, EMI, SIP, FD & RD', category: 'Finance', icon: <Calculator className="w-4 h-4" />, keywords: ['India', 'INR', 'rupee', 'lakh', 'crore', 'GST', 'EMI', 'SIP', 'FD', 'RD'] },
   { id: 'qrcode', title: 'QR Code Generator (WiFi, URL, vCard)', category: 'Utilities', icon: <QrCode className="w-4 h-4" />, keywords: ['qr', 'qrcode', 'wifi', 'vcard', 'barcode', 'scan'] },
-  { id: 'color', title: 'Color Studio & WCAG Contrast Checker', category: 'Design', icon: <Palette className="w-4 h-4" />, keywords: ['color', 'contrast', 'hex', 'rgb', 'hsl', 'wcag', 'palette', 'picker'] },
+  { id: 'qrcode', title: 'UPI Payment QR', category: 'Utilities', icon: <QrCode className="w-4 h-4" />, keywords: ['UPI', 'India', 'INR', 'payment'] },
+  { id: 'color', title: 'Color Studio & WCAG Contrast Checker', category: 'Design', icon: <Palette className="w-4 h-4" />, keywords: ['color', 'contrast', 'hex', 'rgb', 'hsl', 'wcag', 'palette', 'picker', 'peacock palette'] },
 ];
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose, onSelectTool }) => {

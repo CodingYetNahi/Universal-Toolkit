@@ -86,6 +86,19 @@ export const UnitConverterTool: React.FC = () => {
         })}
       </div>
 
+      {category === 'area' && (
+        <div className="space-y-3 rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/70 dark:bg-amber-950/20 p-4 text-xs text-slate-700 dark:text-slate-300">
+          <p><strong>Regional land-unit note:</strong> Kanal and marla measurements can vary by region. Confirm local revenue or registration standards before using them for property transactions.</p>
+          <p>Bigha is region-dependent and therefore is not assigned a universal conversion here.</p>
+          <div className="flex flex-wrap gap-2" aria-label="India-friendly area quick conversions">
+            {[
+              ['Square feet → square metres', 'sqft', 'sqm'], ['Acre → guntha', 'acre', 'guntha'],
+              ['Acre → cent', 'acre', 'cent'], ['Hectare → acre', 'hectare', 'acre'], ['Square yard → square feet', 'sqyd', 'sqft'],
+            ].map(([label, from, to]) => <button key={label} onClick={() => { setFromUnit(from); setToUnit(to); }} className="rounded-lg bg-white dark:bg-slate-800 border border-amber-200 dark:border-slate-700 px-2.5 py-1.5 hover:border-indigo-400">{label}</button>)}
+          </div>
+        </div>
+      )}
+
       {/* Main Interactive Converter Box */}
       <div className="grid grid-cols-1 md:grid-cols-11 gap-4 items-center bg-slate-50/70 dark:bg-slate-950/40 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
         {/* From Input */}

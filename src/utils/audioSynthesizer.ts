@@ -68,7 +68,8 @@ class AmbientAudioEngine {
     const nodesToClean: AudioNode[] = [soundGain];
 
     switch (id) {
-      case 'rain': {
+      case 'rain':
+      case 'indian_monsoon': {
         const buffer = this.createPinkNoiseBuffer(5);
         const noiseSource = this.ctx.createBufferSource();
         noiseSource.buffer = buffer;
@@ -76,7 +77,7 @@ class AmbientAudioEngine {
 
         const filter = this.ctx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(800, this.ctx.currentTime);
+        filter.frequency.setValueAtTime(id === 'indian_monsoon' ? 1100 : 800, this.ctx.currentTime);
 
         const highpass = this.ctx.createBiquadFilter();
         highpass.type = 'highpass';
@@ -172,6 +173,24 @@ class AmbientAudioEngine {
         noiseSource.connect(soundGain);
         noiseSource.start();
         nodesToClean.push(noiseSource);
+        break;
+      }
+      case 'courtyard':
+      case 'train': {
+        const noiseSource = this.ctx.createBufferSource();
+        noiseSource.buffer = this.createPinkNoiseBuffer(6);
+        noiseSource.loop = true;
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(id === 'train' ? 260 : 520, this.ctx.currentTime);
+        const lfo = this.ctx.createOscillator();
+        const lfoGain = this.ctx.createGain();
+        lfo.frequency.setValueAtTime(id === 'train' ? 1.8 : 0.08, this.ctx.currentTime);
+        lfoGain.gain.setValueAtTime(id === 'train' ? 0.08 : 0.03, this.ctx.currentTime);
+        lfo.connect(lfoGain); lfoGain.connect(soundGain.gain);
+        noiseSource.connect(filter); filter.connect(soundGain);
+        noiseSource.start(); lfo.start();
+        nodesToClean.push(noiseSource, filter, lfo, lfoGain);
         break;
       }
     }

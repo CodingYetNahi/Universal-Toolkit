@@ -13,16 +13,16 @@ import {
   Sparkles
 } from 'lucide-react';
 import { WorldClockCity } from '../../types';
+import { formatIndianDate } from '../../utils/india';
 
 const INITIAL_CITIES: WorldClockCity[] = [
-  { id: '1', name: 'San Francisco', timezone: 'America/Los_Angeles', country: 'United States' },
-  { id: '2', name: 'New York', timezone: 'America/New_York', country: 'United States' },
-  { id: '3', name: 'London', timezone: 'Europe/London', country: 'United Kingdom' },
-  { id: '4', name: 'Paris', timezone: 'Europe/Paris', country: 'France' },
-  { id: '5', name: 'Dubai', timezone: 'Asia/Dubai', country: 'United Arab Emirates' },
-  { id: '6', name: 'Mumbai', timezone: 'Asia/Kolkata', country: 'India' },
-  { id: '7', name: 'Tokyo', timezone: 'Asia/Tokyo', country: 'Japan' },
-  { id: '8', name: 'Sydney', timezone: 'Australia/Sydney', country: 'Australia' },
+  ...['New Delhi', 'Mumbai', 'Bengaluru', 'Chennai', 'Kolkata', 'Hyderabad', 'Shivamogga'].map((name, index) => ({ id: `in-${index}`, name, timezone: 'Asia/Kolkata', country: 'India' })),
+  { id: 'world-1', name: 'London', timezone: 'Europe/London', country: 'United Kingdom' },
+  { id: 'world-2', name: 'New York', timezone: 'America/New_York', country: 'United States' },
+  { id: 'world-3', name: 'Dubai', timezone: 'Asia/Dubai', country: 'United Arab Emirates' },
+  { id: 'world-4', name: 'Tokyo', timezone: 'Asia/Tokyo', country: 'Japan' },
+  { id: 'world-5', name: 'Singapore', timezone: 'Asia/Singapore', country: 'Singapore' },
+  { id: 'world-6', name: 'Sydney', timezone: 'Australia/Sydney', country: 'Australia' },
 ];
 
 const AVAILABLE_ADD_CITIES = [
@@ -88,12 +88,8 @@ export const TimezoneTool: React.FC = () => {
         second: useSlider ? undefined : '2-digit',
         hour12: true,
       });
-      const dateStr = effectiveTime.toLocaleDateString('en-US', {
-        timeZone: tz,
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-      });
+      const zonedDateParts = effectiveTime.toLocaleDateString('en-CA', { timeZone: tz }).split('-').map(Number);
+      const dateStr = formatIndianDate(new Date(zonedDateParts[0], zonedDateParts[1] - 1, zonedDateParts[2]));
       const hour24 = parseInt(
         effectiveTime.toLocaleTimeString('en-US', {
           timeZone: tz,
@@ -181,6 +177,7 @@ export const TimezoneTool: React.FC = () => {
             </button>
           </div>
         </div>
+        <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-300">IST — Indian Standard Time (UTC+5:30)</p>
 
         {/* Time Slider Bar */}
         {useSlider && (
